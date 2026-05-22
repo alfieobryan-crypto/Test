@@ -20,6 +20,10 @@ export const ACTIONS = {
   ADD_PROPERTY:      'ADD_PROPERTY',
   UPDATE_PROPERTY:   'UPDATE_PROPERTY',
   DELETE_PROPERTY:   'DELETE_PROPERTY',
+  // CRMs (both modes)
+  ADD_CRM:           'ADD_CRM',
+  UPDATE_CRM:        'UPDATE_CRM',
+  DELETE_CRM:        'DELETE_CRM',
 }
 
 export const DEFAULT_SETTINGS = {
@@ -272,6 +276,47 @@ export function reducer(state, action) {
             ...audit,
             properties: audit.properties.filter(p => p.id !== payload.propertyId),
             crms:       audit.crms.filter(c => c.propertyId !== payload.propertyId),
+          }),
+        },
+      }
+    }
+
+    // ─── CRMs ─────────────────────────────────────────────────────────────────
+
+    case ACTIONS.ADD_CRM: {
+      const audit = state.audits[payload.auditId]
+      return {
+        ...state,
+        audits: {
+          ...state.audits,
+          [payload.auditId]: withUpdatedAt({ ...audit, crms: [...audit.crms, payload.crm] }),
+        },
+      }
+    }
+
+    case ACTIONS.UPDATE_CRM: {
+      const audit = state.audits[payload.auditId]
+      return {
+        ...state,
+        audits: {
+          ...state.audits,
+          [payload.auditId]: withUpdatedAt({
+            ...audit,
+            crms: audit.crms.map(c => c.id === payload.crm.id ? { ...c, ...payload.crm } : c),
+          }),
+        },
+      }
+    }
+
+    case ACTIONS.DELETE_CRM: {
+      const audit = state.audits[payload.auditId]
+      return {
+        ...state,
+        audits: {
+          ...state.audits,
+          [payload.auditId]: withUpdatedAt({
+            ...audit,
+            crms: audit.crms.filter(c => c.id !== payload.crmId),
           }),
         },
       }

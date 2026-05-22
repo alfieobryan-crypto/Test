@@ -5,3 +5,10 @@ body {
   font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
+
+@media print {
+  header, .print\:hidden { display: none !important; }
+  body { background: white; }
+  .bg-white { box-shadow: none !important; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
